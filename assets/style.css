@@ -1,0 +1,66 @@
+:root{
+	--back: #ffffff;
+	--fore: #222222;
+	--accent: #ff6011;
+	--header: var(--accent);
+	--header2: #111111; 
+	--header3: #333333;
+	--header4: #333333;
+	--header5: #333333;
+	--href: #0094dd;
+	--code: #ffffff; }
+@font-face{
+	font-family: "lmmono";
+	src: url("/fonts/lmmono9-regular-webfont.woff2") format('woff2'),
+		 url("/fonts/lmmono9-regular-webfont.woff") format('woff'); 
+	font-weight: normal;
+	font-style: normal; }
+html{
+	background-color: var(--back);
+	color: var(--fore); 
+	font-family: "lmmono", monospace;
+	line-height: 1.8; }
+body{
+	font-size: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 40%; }
+h1,h2,h3,h4,h5{ font-weight: normal; font-family: "lmmono"; }
+h1{ font-size: 2em; 
+	color: var(--header); }
+h2{ font-size: 1.7411em; 
+	color:  var(--header2); }
+h3{ font-size: 1.5157em; 
+	text-align: center; 
+	color: var(--header3); }
+h4{ font-size: 1.3195em; 
+	color: var(--header3); }
+h5{ font-size: 1.1487em; 
+	text-align:center; 
+	color: var(--header3); }
+a{ color: var(--href); }
+blockquote{ 
+	margin: 5px;
+	padding-left: 10px;
+	border-left: 5px solid var(--accent);
+	font-style: italic; }
+pre{ 
+	padding: 1em; 
+	background-color: var(--fore); 
+	border-left: solid var(--accent) 5px; 
+	line-height: 1.2;}
+code{ color: var(--code); 
+	font-family: monospace; }
+nav.top-menu ul{
+	padding: 0;
+	margin: 0;
+	list-style-type: none; }
+nav.top-menu ul li{ display: inline-block; }
+table{ 
+	margin-left: auto; 
+	margin-right: auto; }
+td,th{ 
+	margin: 0.125em; 
+	padding: 0.125em;
+	border-bottom: 2px solid var(--fore); }
+@media only screen and (max-width: 900px){ body{ width: 90%; } }

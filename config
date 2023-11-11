@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# SITE INFORMATION
+URL="https://example.com"
+LANG="en-us"
+AUTHOR="Your Name"
+SITETITLE="Example Website"
+KEYWORDS="Blog, Writing, Websites"
+DESC="A simple website"
+
+# BUILDER PATH
+ROOT="."
+POSTS="$ROOT/posts"
+PAGES="$ROOT/pages"
+IMAGES="$ROOT/img"
+CSS="$ROOT/css"
+
+# OUTPUT PATH 
+SITE="./out/"

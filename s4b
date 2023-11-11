@@ -1,0 +1,109 @@
+#!/bin/sh
+set -e
+. ./config
+
+DATE="$(date --rfc-822)" 
+MD="smu"
+	
+gen_page(){
+	printf "<!DOCTYPE html>\n<html lang=\"$LANG\">
+	<head>
+	\t<meta charset=\"utf-8\"/>
+	\t<meta name=\"author\" content=\"$AUTHOR\"/>
+ 	\t<meta name=\"keywords\" content=\"$KEYWORDS\"/>
+	\t<meta name=\"robots\" content=\"index,follow\"/>
+ 	\t<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"/>
+	\t<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self';\"/>
+ 	\t<link rel=\"icon\" type=\"img/x-icon\" href=\"/img/favicon.ico\"/>
+ 	\t<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\"/>
+	\t<title>$3</title>
+ 	\t<meta name=\"description\" content=\"$DESC\"/>
+ 	\t<meta property=\"og:type\" content=\"website\"/>
+ 	\t<meta property=\"og:title\" content=\"$3\"/>
+ 	\t<meta property=\"og:description\" content=\"$DESC\"/>
+	</head>\n\t<body>\n\t\t<header>\n\t\t\t<nav class=\"top-menu\">\n\t\t\t\t<ul>
+	\t\t\t\t<li><a href=\"/\">Home</a></li> 
+ 	\t\t\t\t<li><a href=\"/about.html\">About</a></li>
+ 	\t\t\t\t<li><a href=\"/archives.html\">Posts</a></li>
+ 	\t\t\t\t<li><a href=\"/feed.xml\">RSS</a></li> 
+ 	\t\t\t</ul>\n\t\t\t</nav>\n\t\t</header>\n\t<main>" >> $SITE$1
+	! [ -z "$2" ] && $MD $2 >> $SITE$1 
+	! [ -z "$4" ] && echo "$4" >> $SITE$1
+	printf "\n\t\t</main>\n\t\t<footer>
+	\t\t\t<p><a rel=\"license\"
+	href=\"https://creativecommons.org/licences/by-sa/4.0/\">
+	<img src=\"/img/cc4.png\" alt=\"Creative Commons License\"></a>
+	<strong>Last Updated: </strong><a href=\"/update_log.txt\">$DATE</a></p>
+	\t\t</footer>\n\t</body>\n</html>" >> $SITE$1 
+}
+
+archives(){
+	content="\t\t\t<h1>Archives</h1>\n\t\t\t<ul class='post-list'>\n" 
+	files=$(ls  $POSTS/*)
+	for i in $files ; do
+		title="$(head -n 1 $i)"
+		name=/posts/${i##*/}
+		content="${content}\t\t\t\t<li><a href='${name%.md}.html'>${title###}</a></li>\n"
+	done
+	content="${content}\t\t\t</ul>" >> $SITE/archives.html
+	gen_page archives.html "" "Archives" "$content"  
+}
+
+create_pages(){
+	for i in $PAGES/*.md ; do
+		title="$(head -n 1 $i)"
+		file=$(basename $i) 
+		gen_page "${file%.md}.html" "pages/$file" "${title###}" ""
+	done
+}
+
+create_posts(){ # Generate Posts, Archive Page, and RSS
+	printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+		<rss xmlns:atom=\"http://www.w3.org/2005/Atom\" version=\"2.0\">
+		\t<channel>
+		\t\t<atom:link rel=\"self\" href=\"$URL/feed.xml\" type=\"application/rss+xml\" />
+		\t\t<title>$SITETITLE</title>\n\t\t<link>$URL</link>\n\t\t<language>$LANG</language>
+		\t\t<lastBuildDate>$DATE</lastBuildDate>\n\t\t<description>$DESC</description>" >> $SITE/feed.xml
+	for i in $POSTS/* ; do
+		name=/posts/${i##*/}
+		title="$(head -n 1 $i)"
+		url="$URL${name%.md}.html"
+		content=$($MD "$i")
+		printf "\n\t\t<item>\n\t\t\t<title>${title### }</title>\n\t\t\t<guid>$url</guid>
+		\t\t\t<link>$url</link>\n\t\t\t<pubDate>$(head -n 2 $i | tail -1)</pubDate>
+		\t\t\t\t<description><![CDATA[" >> $SITE/feed.xml
+		$MD "$i" >> $SITE/feed.xml
+		printf "]]>\n\t\t\t\t</description>\n\t\t</item>" >> $SITE/feed.xml
+		gen_page ${name%.md}.html "$i" "${title###}" ""
+	done 
+	printf "\n\t</channel>\n</rss>" >> $SITE/feed.xml 
+	archives
+}
+
+gen_sitemap(){
+	printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<urlset xmlns=\"http://www.sitemaps.org/schemes/sitemap/0.9\">\n" >> $SITE/sitemap.xml
+	for i in $SITE/*.html ; do
+		name=${i##*/}
+		printf "\t<url>\n\t\t<loc>$URL/$name</loc>
+	 	<lastmod>$DATE</lastmod>\n\t</url>\n" >> $SITE/sitemap.xml
+	done
+	printf  "</urlset>" >> $SITE/sitemap.xml 
+}
+
+clean(){
+	rm -f $SITE/*.html && rm -f $SITE/posts/*.html && rm -f $SITE/*.xml && 
+	mkdir -p $SITE/img $SITE/posts 
+}
+
+build_site(){
+	clean &&
+	printf "$DATE\n" >> $ROOT/assets/update_log.txt && cp -r --remove-destination $ROOT/assets/fonts/ $SITE/ && 
+	cp --remove-destination $ROOT/assets/*.css $SITE/ &&
+	cp --remove-destination $ROOT/assets/*.txt $SITE/ &&
+	cp -r --remove-destination $ROOT/img/* $SITE/img/ && create_pages && create_posts && gen_sitemap 
+}
+
+! [ -z "$1" ] && ! [ -z "$2" ] &&  printf "# $2\n$DATE" >> $POSTS/$1 && exit
+
+build_site
