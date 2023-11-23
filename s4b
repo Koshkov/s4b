@@ -4,8 +4,8 @@ set -e
 
 DATE="$(date --rfc-822)" 
 MD="smu"
-POSTS="./posts"
-PAGES="./pages"
+POSTS="$ROOT/posts"
+PAGES="$ROOT/pages"
 
 	
 gen_page(){
