@@ -94,17 +94,26 @@ gen_sitemap(){
 	printf  "</urlset>" >> $SITE/sitemap.xml 
 }
 
+gen_robots(){
+	printf "User-Agent: *\n\nSitemap: $URL/sitemap.xml" > $SITE/robots.txt
+}
+
 clean(){
-	rm -f $SITE/*.html && rm -f $SITE/posts/*.html && rm -f $SITE/*.xml && 
+	rm -r $SITE && # DANGER!
 	mkdir -p $SITE/img $SITE/posts 
 }
 
 build_site(){
 	clean &&
-	printf "$DATE\n" >> $ROOT/assets/update_log.txt && cp -r --remove-destination $ROOT/assets/fonts/ $SITE/ && 
+	printf "$DATE\n" >> $ROOT/assets/update_log.txt && 
+	cp -r --remove-destination $ROOT/assets/fonts/ $SITE/ && 
 	cp --remove-destination $ROOT/assets/*.css $SITE/ &&
 	cp --remove-destination $ROOT/assets/*.txt $SITE/ &&
-	cp -r --remove-destination $ROOT/img/* $SITE/img/ && create_pages && create_posts && gen_sitemap 
+	cp -r --remove-destination $ROOT/img/* $SITE/img/ && 
+	create_pages && 
+	create_posts && 
+	gen_sitemap && 
+	gen_robots
 }
 
 ! [ -z "$1" ] && ! [ -z "$2" ] &&  printf "# $2\n$DATE" >> $POSTS/$1 && exit

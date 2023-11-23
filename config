@@ -12,4 +12,4 @@ DESC="A simple website"
 ROOT="."
 
 # OUTPUT PATH 
-SITE="./out/"
+SITE="$ROOT/out/"
