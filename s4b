@@ -107,8 +107,7 @@ build_site(){
 	clean &&
 	printf "$DATE\n" >> $ROOT/assets/update_log.txt && 
 	cp -r --remove-destination $ROOT/assets/fonts/ $SITE/ && 
-	cp --remove-destination $ROOT/assets/*.css $SITE/ &&
-	cp --remove-destination $ROOT/assets/*.txt $SITE/ &&
+	cp -r --remove-destination $ROOT/assets/* $SITE/ &&
 	cp -r --remove-destination $ROOT/img/* $SITE/img/ && 
 	create_pages && 
 	create_posts && 
