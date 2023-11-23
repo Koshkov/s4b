@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+		<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+			<channel>
+				<atom:link rel="self" href="https://example.com/feed.xml" type="application/rss+xml" />
+				<title>Example Website</title>
+		<link>https://example.com</link>
+		<language>en-us</language>
+				<lastBuildDate>Thu, 23 Nov 2023 12:58:02 -0600</lastBuildDate>
+		<description>A simple website</description>
+		<item>
+			<title>Example Post</title>
+			<guid>https://example.com/posts/example-post.html</guid>
+					<link>https://example.com/posts/example-post.html</link>
+			<pubDate>Thu, 02 Feb 2023 21:03:18 -0600</pubDate>
+						<description><![CDATA[<h1>Example Post</h1>
+<p>Thu, 02 Feb 2023 21:03:18 -0600</p>
+<p>This is an example post.</p>
+]]>
+				</description>
+		</item>
+	</channel>
+</rss>

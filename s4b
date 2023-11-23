@@ -4,6 +4,9 @@ set -e
 
 DATE="$(date --rfc-822)" 
 MD="smu"
+POSTS="./posts"
+PAGES="./pages"
+
 	
 gen_page(){
 	printf "<!DOCTYPE html>\n<html lang=\"$LANG\">
