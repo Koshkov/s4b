@@ -99,8 +99,9 @@ gen_robots(){
 }
 
 clean(){
-	rm -r $SITE && # DANGER!
-	mkdir -p $SITE/img $SITE/posts 
+	#! [ $SITE = "/" ] &&
+	#	rm -r $SITE && # DANGER Let's not do this
+		mkdir -p $SITE/img $SITE/posts 
 }
 
 build_site(){
